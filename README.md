@@ -15,7 +15,7 @@ Many cities lack:
 - Data-driven planning for essential public infrastructure  
 - Tools that integrate spatial data with welfare planning  
 
-As a result, services like **public toilets, ration shops, and welfare canteens** are often placed inefficiently or excluded entirely from high-need areas.
+As a result, welfare services are allocated ineffectively. Baseline study costs skyrocket, discouraging foreign investment into the city; and slum rehabilitation becomes much more difficult. Moreover, services like **public toilets, ration shops, and welfare canteens** are often placed inefficiently or excluded entirely from high-need areas.
 
 ---
 
