@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - UrbisX</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-hover: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            text-decoration: none;
+        }
+
+        .sidebar-brand img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .sidebar-brand h2 {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .sidebar-brand span {
+            color: var(--accent);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+            padding-left: 0.75rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .nav-item i {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            background: var(--bg-card);
+        }
+
+        .admin-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: white;
+        }
+
+        .admin-info {
+            flex: 1;
+        }
+
+        .admin-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .admin-role {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon.pending { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .stat-icon.approved { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+        .stat-icon.processing { background: rgba(0, 212, 255, 0.2); color: var(--accent); }
+        .stat-icon.total { background: rgba(148, 163, 184, 0.2); color: var(--text-secondary); }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .stat-change {
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-change.positive { color: var(--success); }
+        .stat-change.negative { color: var(--danger); }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-group h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .status-indicators {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-dot.online {
+            background: var(--success);
+        }
+
+        .status-dot.warning {
+            background: var(--warning);
+        }
+
+        .status-dot.offline {
+            background: var(--danger);
+        }
+
+        /* Table */
+        .table-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .table-filters {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .filter-select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: inherit;
+        }
+
+        .search-input {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            width: 250px;
+            font-family: inherit;
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            width: 16px;
+            height: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+        }
+
+        th {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        tr:hover {
+            background: var(--bg-hover);
+        }
+
+        tr:last-child {
+            border-bottom: none;
+        }
+
+        .city-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .city-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .city-state {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .user-email {
+            font-size: 0.85rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .status-approved {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .status-in_progress {
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--accent);
+        }
+
+        .status-completed {
+            background: rgba(34, 197, 94, 0.3);
+            color: var(--success);
+        }
+
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .priority-badge {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .priority-low { background: var(--bg-hover); color: var(--text-muted); }
+        .priority-normal { background: rgba(0, 212, 255, 0.2); color: var(--accent); }
+        .priority-high { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .priority-urgent { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .action-btn.approve:hover {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        .action-btn.reject:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            background: var(--bg-hover);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state i {
+            width: 64px;
+            height: 64px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 80px;
+                padding: 1rem;
+            }
+
+            .sidebar-brand span,
+            .nav-section-title,
+            .nav-item span,
+            .admin-info {
+                display: none;
+            }
+
+            .sidebar-brand {
+                justify-content: center;
+            }
+
+            .nav-item {
+                justify-content: center;
+            }
+
+            .main-content {
+                margin-left: 80px;
+            }
+        }
+
+        /* Date formatting */
+        .date-cell {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .date-relative {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading admin dashboard...</div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="index.html" class="sidebar-brand">
+            <img src="cropped_circle_image.png" alt="UrbisX Logo">
+            <div>
+                <h2>UrbisX</h2>
+                <span>Admin Panel</span>
+            </div>
+        </a>
+
+        <nav>
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Management</div>
+                <a href="#" class="nav-item" data-page="requests">
+                    <i data-lucide="inbox"></i>
+                    <span>City Requests</span>
+                    <span class="nav-badge" id="pendingBadge">0</span>
+                </a>
+                <a href="#" class="nav-item" data-page="cities">
+                    <i data-lucide="map-pin"></i>
+                    <span>Cities</span>
+                </a>
+                <a href="#" class="nav-item" data-page="processing">
+                    <i data-lucide="cpu"></i>
+                    <span>Processing Queue</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">System</div>
+                <a href="#" class="nav-item" data-page="users">
+                    <i data-lucide="users"></i>
+                    <span>Users</span>
+                </a>
+                <a href="#" class="nav-item" data-page="activity">
+                    <i data-lucide="activity"></i>
+                    <span>Activity Log</span>
+                </a>
+                <a href="#" class="nav-item" data-page="settings">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="admin-profile">
+                <div class="admin-avatar" id="adminAvatar">SA</div>
+                <div class="admin-info">
+                    <div class="admin-name" id="adminName">Admin</div>
+                    <div class="admin-role" id="adminRole">Super Admin</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">City Requests</h1>
+                <p class="page-subtitle">Manage and review city processing requests from users</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="refreshData()">
+                    <i data-lucide="refresh-cw"></i>
+                    Refresh
+                </button>
+                <button class="btn btn-primary" onclick="exportData()">
+                    <i data-lucide="download"></i>
+                    Export
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon pending">
+                        <i data-lucide="clock"></i>
+                    </div>
+                    <div class="stat-change positive" id="pendingChange">+2 today</div>
+                </div>
+                <div class="stat-value" id="statPending">0</div>
+                <div class="stat-label">Pending Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon approved">
+                        <i data-lucide="check-circle"></i>
+                    </div>
+                    <div class="stat-change positive" id="approvedChange">+5 this week</div>
+                </div>
+                <div class="stat-value" id="statApproved">0</div>
+                <div class="stat-label">Approved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon processing">
+                        <i data-lucide="loader"></i>
+                    </div>
+                    <div class="stat-change" id="processingChange">2 active</div>
+                </div>
+                <div class="stat-value" id="statProcessing">0</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon total">
+                        <i data-lucide="layers"></i>
+                    </div>
+                    <div class="stat-change positive" id="totalChange">+7 this month</div>
+                </div>
+                <div class="stat-value" id="statTotal">0</div>
+                <div class="stat-label">Total Requests</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Bar -->
+        <div class="quick-actions">
+            <div class="action-group">
+                <h3>Quick Actions</h3>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="bulkApprove()">
+                        <i data-lucide="check-circle-2"></i>
+                        Approve All Pending
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportRequests()">
+                        <i data-lucide="download"></i>
+                        Export Data
+                    </button>
+                    <button class="btn btn-secondary" onclick="showAnalytics()">
+                        <i data-lucide="bar-chart-3"></i>
+                        View Analytics
+                    </button>
+                </div>
+            </div>
+            <div class="action-group">
+                <h3>System Status</h3>
+                <div class="status-indicators">
+                    <div class="status-item">
+                        <div class="status-dot online"></div>
+                        <span>Database: Online</span>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-dot online"></div>
+                        <span>Processing: Active</span>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-dot warning"></div>
+                        <span>Queue: 3 pending</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Requests Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h2 class="table-title">All Requests</h2>
+                <div class="table-filters">
+                    <div class="search-wrapper">
+                        <i data-lucide="search"></i>
+                        <input type="text" class="search-input" placeholder="Search cities..." id="searchInput">
+                    </div>
+                    <select class="filter-select" id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                    <select class="filter-select" id="priorityFilter">
+                        <option value="">All Priority</option>
+                        <option value="urgent">Urgent</option>
+                        <option value="high">High</option>
+                        <option value="normal">Normal</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>City</th>
+                        <th>Requested By</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="requestsTableBody">
+                    <!-- Populated by JavaScript -->
+                </tbody>
+            </table>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <i data-lucide="inbox"></i>
+                <h3>No requests found</h3>
+                <p>There are no city requests matching your filters.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Request Detail Modal -->
+    <div class="modal-overlay" id="requestModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Request Details</h3>
+                <button class="modal-close" onclick="closeModal('requestModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="requestModalBody">
+                <!-- Populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('requestModal')">Close</button>
+                <button class="btn btn-danger" onclick="rejectRequest()" id="rejectBtn">Reject</button>
+                <button class="btn btn-success" onclick="approveRequest()" id="approveBtn">Approve</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    
+    <script>
+        // Global state
+        let currentRequests = [];
+        let selectedRequest = null;
+        let isAdmin = false;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            lucide.createIcons();
+            await checkAdminAuth();
+        });
+
+        // Check admin authentication
+        async function checkAdminAuth() {
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                
+                if (!session) {
+                    window.location.href = 'login.html?redirect=admin.html';
+                    return;
+                }
+
+                // Check if user is admin
+                const { data: adminData, error } = await supabaseClient
+                    .from('admin_users')
+                    .select('*')
+                    .eq('user_id', session.user.id)
+                    .single();
+
+                if (error || !adminData) {
+                    alert('Access denied. You are not an admin.');
+                    window.location.href = 'map.html';
+                    return;
+                }
+
+                isAdmin = true;
+                updateAdminProfile(session.user, adminData);
+                await loadDashboardData();
+                hideLoading();
+
+            } catch (error) {
+                console.error('Auth error:', error);
+                window.location.href = 'login.html?redirect=admin.html';
+            }
+        }
+
+        // Update admin profile in sidebar
+        function updateAdminProfile(user, adminData) {
+            const name = user.user_metadata?.first_name || user.email.split('@')[0];
+            document.getElementById('adminName').textContent = name;
+            document.getElementById('adminRole').textContent = adminData.role === 'super_admin' ? 'Super Admin' : 'Admin';
+            document.getElementById('adminAvatar').textContent = name.substring(0, 2).toUpperCase();
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            await Promise.all([
+                loadStats(),
+                loadRequests()
+            ]);
+        }
+
+        // Load statistics
+        async function loadStats() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('city_requests')
+                    .select('status');
+
+                if (error) throw error;
+
+                const stats = {
+                    pending: 0,
+                    approved: 0,
+                    in_progress: 0,
+                    completed: 0,
+                    rejected: 0,
+                    total: data.length
+                };
+
+                data.forEach(req => {
+                    if (stats.hasOwnProperty(req.status)) {
+                        stats[req.status]++;
+                    }
+                });
+
+                document.getElementById('statPending').textContent = stats.pending;
+                document.getElementById('statApproved').textContent = stats.approved;
+                document.getElementById('statProcessing').textContent = stats.in_progress;
+                document.getElementById('statTotal').textContent = stats.total;
+                document.getElementById('pendingBadge').textContent = stats.pending;
+
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Load requests
+        async function loadRequests() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('city_requests')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                currentRequests = data || [];
+                renderRequests(currentRequests);
+
+            } catch (error) {
+                console.error('Error loading requests:', error);
+                renderRequests([]);
+            }
+        }
+
+        // Render requests table
+        function renderRequests(requests) {
+            const tbody = document.getElementById('requestsTableBody');
+            const emptyState = document.getElementById('emptyState');
+
+            if (requests.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            tbody.innerHTML = requests.map(req => `
+                <tr>
+                    <td>
+                        <div class="city-info">
+                            <span class="city-name">${req.city_name}</span>
+                            <span class="city-state">${req.state}, ${req.country || 'India'}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">${req.user_email.substring(0, 2).toUpperCase()}</div>
+                            <span class="user-email">${req.user_email}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="priority-badge priority-${req.priority}">${req.priority}</span>
+                    </td>
+                    <td>
+                        <span class="status-badge status-${req.status}">${formatStatus(req.status)}</span>
+                    </td>
+                    <td>
+                        <div class="date-cell">${formatDate(req.created_at)}</div>
+                        <div class="date-relative">${getRelativeTime(req.created_at)}</div>
+                    </td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="action-btn" onclick="viewRequest('${req.id}')" title="View Details">
+                                <i data-lucide="eye"></i>
+                            </button>
+                            ${req.status === 'pending' ? `
+                                <button class="action-btn approve" onclick="quickApprove('${req.id}')" title="Approve">
+                                    <i data-lucide="check"></i>
+                                </button>
+                                <button class="action-btn reject" onclick="quickReject('${req.id}')" title="Reject">
+                                    <i data-lucide="x"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        // View request details
+        function viewRequest(id) {
+            selectedRequest = currentRequests.find(r => r.id === id);
+            if (!selectedRequest) return;
+
+            const modalBody = document.getElementById('requestModalBody');
+            modalBody.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">City Name</label>
+                    <div style="color: var(--text-primary); font-size: 1rem;">${selectedRequest.city_name}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">State / Country</label>
+                    <div style="color: var(--text-primary);">${selectedRequest.state}, ${selectedRequest.country || 'India'}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Coordinates</label>
+                    <div style="color: var(--text-primary);">
+                        ${selectedRequest.latitude ? `${selectedRequest.latitude}, ${selectedRequest.longitude}` : 'Not provided'}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Requested By</label>
+                    <div style="color: var(--text-primary);">${selectedRequest.user_email}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Reason</label>
+                    <div style="color: var(--text-secondary);">${selectedRequest.reason || 'No reason provided'}</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Priority</label>
+                    <span class="priority-badge priority-${selectedRequest.priority}">${selectedRequest.priority}</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <span class="status-badge status-${selectedRequest.status}">${formatStatus(selectedRequest.status)}</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Admin Notes</label>
+                    <textarea class="form-textarea" id="adminNotes" placeholder="Add notes about this request...">${selectedRequest.admin_notes || ''}</textarea>
+                </div>
+            `;
+
+            // Show/hide action buttons based on status
+            const approveBtn = document.getElementById('approveBtn');
+            const rejectBtn = document.getElementById('rejectBtn');
+            if (selectedRequest.status === 'pending') {
+                approveBtn.style.display = 'inline-flex';
+                rejectBtn.style.display = 'inline-flex';
+            } else {
+                approveBtn.style.display = 'none';
+                rejectBtn.style.display = 'none';
+            }
+
+            openModal('requestModal');
+        }
+
+        // Approve request
+        async function approveRequest() {
+            if (!selectedRequest) return;
+            await updateRequestStatus(selectedRequest.id, 'approved');
+            closeModal('requestModal');
+        }
+
+        // Reject request
+        async function rejectRequest() {
+            if (!selectedRequest) return;
+            await updateRequestStatus(selectedRequest.id, 'rejected');
+            closeModal('requestModal');
+        }
+
+        // Quick approve
+        async function quickApprove(id) {
+            if (confirm('Approve this city request?')) {
+                await updateRequestStatus(id, 'approved');
+            }
+        }
+
+        // Quick reject
+        async function quickReject(id) {
+            if (confirm('Reject this city request?')) {
+                await updateRequestStatus(id, 'rejected');
+            }
+        }
+
+        // Update request status
+        async function updateRequestStatus(id, status) {
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                const adminNotes = document.getElementById('adminNotes')?.value || '';
+
+                const { error } = await supabaseClient
+                    .from('city_requests')
+                    .update({
+                        status: status,
+                        admin_notes: adminNotes,
+                        reviewed_by: session.user.id,
+                        reviewed_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                await loadDashboardData();
+
+            } catch (error) {
+                console.error('Error updating request:', error);
+                alert('Failed to update request. Please try again.');
+            }
+        }
+
+        // Filter and search
+        document.getElementById('searchInput').addEventListener('input', filterRequests);
+        document.getElementById('statusFilter').addEventListener('change', filterRequests);
+        document.getElementById('priorityFilter').addEventListener('change', filterRequests);
+
+        function filterRequests() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const priority = document.getElementById('priorityFilter').value;
+
+            const filtered = currentRequests.filter(req => {
+                const matchesSearch = req.city_name.toLowerCase().includes(search) ||
+                                     req.state.toLowerCase().includes(search) ||
+                                     req.user_email.toLowerCase().includes(search);
+                const matchesStatus = !status || req.status === status;
+                const matchesPriority = !priority || req.priority === priority;
+                return matchesSearch && matchesStatus && matchesPriority;
+            });
+
+            renderRequests(filtered);
+        }
+
+        // Refresh data
+        async function refreshData() {
+            await loadDashboardData();
+        }
+
+        // Bulk approve all pending requests
+        async function bulkApprove() {
+            const pendingRequests = currentRequests.filter(r => r.status === 'pending');
+            if (pendingRequests.length === 0) {
+                alert('No pending requests to approve.');
+                return;
+            }
+
+            if (!confirm(`Approve ${pendingRequests.length} pending requests?`)) return;
+
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                
+                for (const request of pendingRequests) {
+                    await supabaseClient
+                        .from('city_requests')
+                        .update({
+                            status: 'approved',
+                            reviewed_by: session.user.id,
+                            reviewed_at: new Date().toISOString(),
+                            updated_at: new Date().toISOString()
+                        })
+                        .eq('id', request.id);
+                }
+
+                await loadDashboardData();
+                alert(`Successfully approved ${pendingRequests.length} requests!`);
+            } catch (error) {
+                console.error('Bulk approve error:', error);
+                alert('Failed to approve requests. Please try again.');
+            }
+        }
+
+        // Export requests data
+        function exportRequests() {
+            const csv = [
+                ['City', 'State', 'Country', 'Email', 'Priority', 'Status', 'Date', 'Reason'].join(','),
+                ...currentRequests.map(r => [
+                    r.city_name,
+                    r.state,
+                    r.country || 'India',
+                    r.user_email,
+                    r.priority,
+                    r.status,
+                    formatDate(r.created_at),
+                    (r.reason || '').replace(/,/g, ';')
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `city_requests_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        // Show analytics modal
+        function showAnalytics() {
+            alert('Analytics feature coming soon! This will show charts and trends of city requests over time.');
+        }
+
+        // Export data (legacy function)
+        function exportData() {
+            exportRequests();
+        }
+
+        // Utility functions
+        function formatStatus(status) {
+            return status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+
+        function getRelativeTime(dateStr) {
+            const diff = Date.now() - new Date(dateStr).getTime();
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            if (days === 0) return 'Today';
+            if (days === 1) return 'Yesterday';
+            if (days < 7) return `${days} days ago`;
+            if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
+            return `${Math.floor(days / 30)} months ago`;
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            selectedRequest = null;
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

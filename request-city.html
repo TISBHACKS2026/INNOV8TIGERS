@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request a City – UrbisX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="landing.css" />
+</head>
+<body>
+  <div id="scrollProgress" class="scroll-progress" aria-hidden="true"></div>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a class="brand" href="index.html">
+        <img src="cropped_circle_image.png" alt="UrbisX Logo" />
+        <h1>UrbisX</h1>
+      </a>
+      <div class="nav-actions">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#how">How it Works</a>
+        <a href="request-city.html">Request a City</a>
+        <a href="map.html" class="btn btn-secondary">Launch App</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero hero--subtle">
+    <div class="container hero-content reveal-up">
+      <h2>Request a City for UrbisX</h2>
+      <p>Tell us which city you want processed. We’ll notify you when it’s ready.</p>
+    </div>
+  </header>
+
+  <!-- Form -->
+  <section class="section">
+    <div class="container form-wrap">
+      <div class="form-card reveal-up">
+        <form id="cityRequestForm" novalidate>
+          <div class="form-grid stagger">
+            <div class="input-group reveal-up">
+              <label for="email">Your Email</label>
+              <input id="email" name="email" type="email" placeholder="you@example.com" required />
+            </div>
+            <div class="input-group reveal-up">
+              <label for="city">City Name</label>
+              <input id="city" name="city" type="text" placeholder="e.g., Nairobi" required />
+            </div>
+          </div>
+
+          <div class="input-group" style="margin-top:12px;">
+            <label>Geographic extent (bounding box)</label>
+            <div class="form-grid-4 stagger">
+              <div class="input-group reveal-up">
+                <label for="west" class="hint">West (lon) [-180..180]</label>
+                <input id="west" name="west" type="number" inputmode="decimal" step="0.0001" min="-180" max="180" placeholder="-123.2500" required />
+              </div>
+              <div class="input-group reveal-up">
+                <label for="south" class="hint">South (lat) [-90..90]</label>
+                <input id="south" name="south" type="number" inputmode="decimal" step="0.0001" min="-90" max="90" placeholder="-1.2921" required />
+              </div>
+              <div class="input-group reveal-up">
+                <label for="east" class="hint">East (lon) [-180..180]</label>
+                <input id="east" name="east" type="number" inputmode="decimal" step="0.0001" min="-180" max="180" placeholder="-122.0000" required />
+              </div>
+              <div class="input-group reveal-up">
+                <label for="north" class="hint">North (lat) [-90..90]</label>
+                <input id="north" name="north" type="number" inputmode="decimal" step="0.0001" min="-90" max="90" placeholder="-1.1000" required />
+              </div>
+            </div>
+            <!-- <div class="hint">Tip: You can grab a city's bounding box from tools like OpenStreetMap or by dragging a rectangle on web map utilities.</div> -->
+          </div>
+
+          <div class="input-group reveal-up" style="margin-top:12px;">
+            <label for="notes">Notes (optional)</label>
+            <textarea id="notes" name="notes" rows="3" placeholder="Any additional info you want to share..."></textarea>
+          </div>
+
+          <div class="actions reveal-up">
+            <button type="submit" class="btn btn-primary">Submit via Email</button>
+            <button type="button" id="copyBtn" class="btn btn-secondary">Copy Request</button>
+          </div>
+          <div id="formSuccess" class="success" role="status" aria-live="polite">Copied to clipboard. You can paste into an email to hello@urbisx.ai</div>
+          <div id="formError" class="error" role="status" aria-live="polite">Please correct the highlighted fields.</div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; <span id="year"></span> UrbisX. Built for equitable urban development.</p>
+    </div>
+  </footer>
+
+  <!-- Supabase -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    function validateBBox(w, s, e, n) {
+      const lonOk = (v) => v >= -180 && v <= 180;
+      const latOk = (v) => v >= -90 && v <= 90;
+      if (![w,s,e,n].every(v => Number.isFinite(v))) return false;
+      if (!lonOk(w) || !lonOk(e) || !latOk(s) || !latOk(n)) return false;
+      if (e <= w || n <= s) return false; // east > west, north > south
+      return true;
+    }
+
+    function markInvalid(el, invalid) {
+      const group = el.closest('.input-group');
+      if (!group) return;
+      group.classList.toggle('invalid', !!invalid);
+      group.classList.toggle('valid', !invalid);
+      if (!invalid) {
+        // remove inline styles if any were previously set
+        el.style.borderColor = '';
+      }
+    }
+
+    function buildRequestPayload() {
+      const email = document.getElementById('email').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const west = parseFloat(document.getElementById('west').value);
+      const south = parseFloat(document.getElementById('south').value);
+      const east = parseFloat(document.getElementById('east').value);
+      const north = parseFloat(document.getElementById('north').value);
+      const notes = document.getElementById('notes').value.trim();
+      return { email, city, west, south, east, north, notes };
+    }
+
+    function payloadToText(p) {
+      return `City Request\n\nEmail: ${p.email}\nCity: ${p.city}\nBBox: west=${p.west}, south=${p.south}, east=${p.east}, north=${p.north}\nNotes: ${p.notes || '-'}\n`;
+    }
+
+    function mailtoHref(p) {
+      const subject = encodeURIComponent(`UrbisX – Request City: ${p.city}`);
+      const body = encodeURIComponent(payloadToText(p));
+      return `mailto:hello@urbisx.ai?subject=${subject}&body=${body}`;
+    }
+
+    function validateAndMark(p) {
+      let ok = true;
+      const emailEl = document.getElementById('email');
+      const cityEl = document.getElementById('city');
+      const westEl = document.getElementById('west');
+      const southEl = document.getElementById('south');
+      const eastEl = document.getElementById('east');
+      const northEl = document.getElementById('north');
+
+      if (!p.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email)) { ok = false; markInvalid(emailEl, true); } else markInvalid(emailEl, false);
+      if (!p.city) { ok = false; markInvalid(cityEl, true); } else markInvalid(cityEl, false);
+      if (!validateBBox(p.west, p.south, p.east, p.north)) {
+        ok = false; [westEl, southEl, eastEl, northEl].forEach(el => markInvalid(el, true));
+      } else {
+        [westEl, southEl, eastEl, northEl].forEach(el => markInvalid(el, false));
+      }
+      return ok;
+    }
+
+    document.getElementById('cityRequestForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const success = document.getElementById('formSuccess');
+      const error = document.getElementById('formError');
+      success.style.display = 'none';
+      error.style.display = 'none';
+
+      const payload = buildRequestPayload();
+      if (!validateAndMark(payload)) {
+        error.style.display = 'block';
+        // focus and scroll to first invalid field
+        const firstInvalid = document.querySelector('.input-group.invalid input, .input-group.invalid textarea');
+        if (firstInvalid) {
+          firstInvalid.focus({ preventScroll: true });
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+
+      // Submit to Supabase database
+      try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        
+        // Calculate center coordinates from bounding box
+        const centerLat = (payload.north + payload.south) / 2;
+        const centerLon = (payload.east + payload.west) / 2;
+        
+        const { data, error: dbError } = await supabaseClient
+          .from('city_requests')
+          .insert([{
+            user_id: session?.user?.id || null,
+            user_email: payload.email,
+            city_name: payload.city,
+            state: 'Unknown', // User can update this
+            country: 'India',
+            latitude: centerLat,
+            longitude: centerLon,
+            reason: payload.notes || `Bounding box: W=${payload.west}, S=${payload.south}, E=${payload.east}, N=${payload.north}`,
+            priority: 'normal',
+            status: 'pending'
+          }])
+          .select();
+
+        if (dbError) throw dbError;
+
+        success.textContent = 'Request submitted successfully! We will review it and notify you when processing begins.';
+        success.style.display = 'block';
+        
+        // Reset form
+        document.getElementById('cityRequestForm').reset();
+        document.querySelectorAll('.input-group').forEach(g => {
+          g.classList.remove('valid', 'invalid');
+        });
+
+      } catch (err) {
+        console.error('Supabase error:', err);
+        // Fallback to email method
+        try {
+          window.location.href = mailtoHref(payload);
+          await navigator.clipboard.writeText(payloadToText(payload));
+          success.textContent = 'Database unavailable. Request opened in your email client instead.';
+          success.style.display = 'block';
+        } catch (_) {
+          error.textContent = 'Could not submit request. Please try again or email hello@urbisx.ai';
+          error.style.display = 'block';
+        }
+      }
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', async () => {
+      const success = document.getElementById('formSuccess');
+      const error = document.getElementById('formError');
+      success.style.display = 'none';
+      error.style.display = 'none';
+
+      const payload = buildRequestPayload();
+      if (!validateAndMark(payload)) { error.style.display = 'block'; return; }
+
+      try {
+        await navigator.clipboard.writeText(payloadToText(payload));
+        success.textContent = 'Copied to clipboard. Paste into an email to hello@urbisx.ai';
+        success.style.display = 'block';
+      } catch (_) {
+        error.textContent = 'Copy failed. Please select and copy manually.';
+        error.style.display = 'block';
+      }
+    });
+
+    // Subtle scroll-reveal animations (matches index.html)
+    (function() {
+      try {
+        const els = document.querySelectorAll('.reveal-up');
+        if (!('IntersectionObserver' in window) || els.length === 0) {
+          els.forEach(el => el.classList.add('is-visible'));
+          return;
+        }
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+        els.forEach(el => io.observe(el));
+      } catch (_) { /* no-op */ }
+    })();
+
+    // Navbar elevation on scroll (match index)
+    (function() {
+      try {
+        const nav = document.querySelector('.navbar');
+        if (!nav) return;
+        let last = false;
+        function onScroll() {
+          const elevated = window.scrollY > 8;
+          if (elevated !== last) {
+            nav.classList.toggle('navbar--elevated', elevated);
+            last = elevated;
+          }
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      } catch (_) { /* no-op */ }
+    })();
+
+    // Scroll progress bar updater
+    (function() {
+      try {
+        const bar = document.getElementById('scrollProgress');
+        if (!bar) return;
+        function onScroll() {
+          const h = document.documentElement;
+          const max = Math.max(1, h.scrollHeight - window.innerHeight);
+          const pct = Math.max(0, Math.min(1, window.scrollY / max));
+          bar.style.width = (pct * 100).toFixed(1) + '%';
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        onScroll();
+      } catch (_) { /* no-op */ }
+    })();
+
+    // Back-to-top button
+    (function() {
+      try {
+        const btn = document.createElement('button');
+        btn.id = 'toTopBtn';
+        btn.className = 'to-top';
+        btn.setAttribute('aria-label', 'Back to top');
+        btn.title = 'Back to top';
+        btn.textContent = '↑';
+        document.body.appendChild(btn);
+        function onScroll() {
+          const show = window.scrollY > 400;
+          btn.classList.toggle('to-top--visible', show);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+        btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      } catch (_) { /* no-op */ }
+    })();
+  </script>
+</body>
+</html>

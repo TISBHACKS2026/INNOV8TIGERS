@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UrbisX — Mapping the Unmapped</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="landing.css" />
+  <link rel="stylesheet" href="language-styles.css" />
+  <meta name="description" content="UrbisX uses AI to detect and visualize informal settlements for equitable urban development." />
+</head>
+<body>
+  <div class="mobile-nav-overlay">
+    <a href="#how">How it Works</a>
+    <a href="#features">Features</a>
+    <a href="request-city.html">Request a City</a>
+    <div class="mobile-auth-section" id="mobileAuthSection">
+      <!-- Will be populated by JavaScript based on auth state -->
+    </div>
+  </div>
+  <div id="scrollProgress" class="scroll-progress" aria-hidden="true"></div>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="index.html">
+        <img src="cropped_circle_image.png" alt="UrbisX Logo" />
+        <span class="wordmark">UrbisX</span>
+      </a>
+      <div class="nav-actions">
+        <a href="#how" data-i18n="nav.howItWorks">How it Works</a>
+        <a href="#features" data-i18n="nav.features">Features</a> 
+        <a href="request-city.html" data-i18n="nav.requestCity">Request a City</a>
+        <div id="languageSelectorNav"></div>
+        <div class="auth-nav-section" id="authNavSection">
+          <!-- Will be populated by JavaScript based on auth state -->
+        </div>
+      </div>
+    </div>
+  </nav>
+  <button class="mobile-menu-btn" aria-label="Toggle menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- Hero -->
+  <header class="hero hero--video">
+    <div class="hero-bg" aria-hidden="true">
+      <img src="image copy.png" alt="UrbisX hero image" class="hero-video">
+      <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-ornaments" aria-hidden="true">
+      <span class="orb orb--1"></span>
+      <span class="orb orb--2"></span>
+      <span class="orb orb--3"></span>
+      <span class="orb orb--4"></span>
+      <span class="grid"></span>
+      <span class="particles"></span>
+    </div>
+    <div class="container hero-content">
+      <span class="eyebrow" data-i18n="hero.eyebrow">Pioneering Urban Intelligence</span>
+      <h1><span class="accent-text" data-i18n="hero.title">Revealing the Unseen</span> <span data-i18n="hero.titleSuffix">in Our Cities</span></h1>
+      
+    
+      
+      <div class="hero-cta">
+        <a href="map.html" class="btn btn-primary" data-i18n="hero.ctaPrimary">Launch Interactive Map</a>
+        <a href="request-city.html" class="btn btn-secondary" data-i18n="hero.ctaSecondary">Request a City</a>
+      </div>
+  
+    </div>
+    <a class="scroll-indicator" href="#why" aria-label="Scroll">
+      <span class="scroll-indicator__dot"></span>
+    </a>
+  </header>
+
+  <!-- Product Showcase -->
+  <section class="product-showcase" id="showcase">
+    <div class="showcase-bg" aria-hidden="true">
+      <div class="showcase-gradient"></div>
+      <div class="showcase-grid"></div>
+    </div>
+    <div class="container">
+      <div class="showcase-header reveal-up">
+        <span class="eyebrow" data-i18n="showcase.eyebrow">See It In Action</span>
+        <h2 data-i18n="showcase.title">Interactive Mapping Platform</h2>
+        <p data-i18n="showcase.subtitle">Explore settlement data with precision. Toggle layers, analyze patterns, export insights.</p>
+      </div>
+      
+      <div class="showcase-browser reveal-up">
+        <div class="browser-chrome">
+          <div class="browser-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="browser-address">app.urbisx.com/map</div>
+        </div>
+        <div class="browser-content">
+          <img src="platform-screenshot.png" alt="UrbisX Platform Interface" class="showcase-screenshot">
+        </div>
+      </div>
+      
+      <div class="showcase-features">
+        <div class="showcase-feature reveal-up">
+          <div class="sf-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <h4 data-i18n="showcase.feature1Title">Geospatial Analysis</h4>
+          <p data-i18n="showcase.feature1Text">Visualize settlement boundaries with precision accuracy</p>
+        </div>
+        <div class="showcase-feature reveal-up">
+          <div class="sf-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+          </div>
+          <h4 data-i18n="showcase.feature2Title">Layer Control</h4>
+          <p data-i18n="showcase.feature2Text">Toggle between heatmaps, boundaries, and POI data</p>
+        </div>
+        <div class="showcase-feature reveal-up">
+          <div class="sf-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          </div>
+          <h4 data-i18n="showcase.feature3Title">Export Ready</h4>
+          <p data-i18n="showcase.feature3Text">Download GIS-compatible data in multiple formats</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider" aria-hidden="true">
+    <div class="divider-pattern"></div>
+  </div>
+
+  <!-- Why Section -->
+  <section class="why-section" id="why">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <span class="eyebrow" data-i18n="why.eyebrow">Why It Matters</span>
+        <h2 data-i18n="why.title">Making the Invisible Visible</h2>
+        <p class="subtitle" data-i18n="why.subtitle">Informal settlements are often missing from official data. Our technology brings them to light, enabling better decisions and more equitable outcomes.</p>
+      </div>
+      
+      <div class="key-features reveal-up">
+        <div class="key-feature">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M12,20c-4.41,0-8-3.59-8-8s3.59-8,8-8s8,3.59,8,8S16.41,20,12,20z"/><path d="M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5S14.76,7,12,7z M12,15c-1.66,0-3-1.34-3-3s1.34-3,3-3s3,1.34,3,3S13.66,15,12,15z"/></svg>
+          </div>
+          <span>AI Detection</span>
+        </div>
+        <div class="key-feature">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99,2C6.47,2,2,6.48,2,12s4.47,10,9.99,10C17.52,22,22,17.52,22,12S17.52,2,11.99,2z M12,20c-4.42,0-8-3.58-8-8s3.58-8,8-8s8,3.58,8,8S16.42,20,12,20z"/><path d="M12.5,7H11v6l5.25,3.15l0.75-1.23l-4.5-2.67V7z"/></svg>
+          </div>
+          <span>Real-time Analysis</span>
+        </div>
+        <div class="key-feature">
+          <div class="feature-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M19,19H5V5h14V19z"/><path d="M7,10h2v7H7V10z M11,8h2v9h-2V8z M15,12h2v5h-2V12z"/></svg>
+          </div>
+          <span>Export Ready</span>
+        </div>
+      </div>
+      
+      <div class="why-grid">
+        <div class="why-card reveal-up">
+          <div class="why-card-inner">
+            <div class="why-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M12,20c-4.41,0-8-3.59-8-8s3.59-8,8-8s8,3.59,8,8S16.41,20,12,20z M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5S14.76,7,12,7z"/>
+              </svg>
+            </div>
+            <h3 data-i18n="why.card1Title">Visibility</h3>
+            <p data-i18n="why.card1Text">Reveal settlements that traditional mapping misses, creating a more complete picture of urban landscapes and enabling data-driven decisions for inclusive urban planning.</p>
+          </div>
+        </div>
+        
+        <div class="why-card reveal-up" style="--delay: 0.1s">
+          <div class="why-card-inner">
+            <div class="why-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.99,2C6.47,2,2,6.48,2,12s4.47,10,9.99,10C17.52,22,22,17.52,22,12S17.52,2,11.99,2z M12,20c-4.42,0-8-3.58-8-8s3.58-8,8-8s8,3.58,8,8S16.42,20,12,20z M12.5,7H11v6l5.25,3.15l0.75-1.23l-4.5-2.67V7z"/>
+              </svg>
+            </div>
+            <h3 data-i18n="why.card2Title">Speed</h3>
+            <p data-i18n="why.card2Text">Process vast urban areas in minutes, not months, with our efficient AI-powered analysis that enables quick identification and response to urban development needs.</p>
+          </div>
+        </div>
+        
+        <div class="why-card reveal-up" style="--delay: 0.2s">
+          <div class="why-card-inner">
+            <div class="why-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,2L4,5v6.09c0,5.05,3.41,9.76,8,10.91c4.59-1.15,8-5.86,8-10.91V5L12,2z M18,11.09c0,4-2.55,7.7-6,8.83c-3.45-1.13-6-4.82-6-8.83V6.31l6-2.12l6,2.12V11.09z M12,15c-1.66,0-3-1.34-3-3s1.34-3,3-3s3,1.34,3,3S13.66,15,12,15z"/>
+              </svg>
+            </div>
+            <h3 data-i18n="why.card3Title">Impact</h3>
+            <p data-i18n="why.card3Text">Empower organizations to make data-informed decisions that transform communities and support evidence-based interventions worldwide.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- <div class="why-stats reveal-up">
+        <div class="stat-item">
+          <span class="stat-number" data-count="100">0</span>+
+          <span class="stat-label">Cities Analyzed</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" data-count="10">0</span>M+
+          <span class="stat-label">People Impacted</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" data-count="95">0</span>%
+          <span class="stat-label">Accuracy Rate</span>
+        </div>
+      </div> -->
+    </div>
+    
+    <div class="why-pattern" aria-hidden="true"></div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="section how-section" id="how">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <h3 data-i18n="how.title">How It Works</h3>
+        <p data-i18n="how.subtitle">A simple, powerful, three-step process from raw imagery to actionable insight.</p>
+      </div>
+      
+      <div class="process-flow">
+        <div class="process-step reveal-up" data-step="1">
+          <div class="step-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21,19V5c0-1.1-0.9-2-2-2H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14C20.1,21,21,20.1,21,19z M19,5v10.5l-3.5-3.5 l-2.5,2.5L8,9.5L5,12.5V5H19z M12,8.5c0.8,0,1.5-0.7,1.5-1.5S12.8,5.5,12,5.5S10.5,6.2,10.5,7S11.2,8.5,12,8.5z"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <span class="step-number">01</span>
+            <h4 data-i18n="how.step1Title">Satellite Imagery</h4>
+            <p data-i18n="how.step1Text">We ingest and preprocess high-resolution imagery to ensure clarity and consistency across scenes.</p>
+          </div>
+        </div>
+        
+        <div class="process-step reveal-up" data-step="2">
+          <div class="step-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9,11H7v9h2V11z M13,16h-2v5h2V16z M16,13v8h2v-8H16z M12,3C6.48,3,2,7.48,2,13s4.48,10,10,10s10-4.48,10-10 S17.52,3,12,3z M12,21c-4.41,0-8-3.59-8-8s3.59-8,8-8s8,3.59,8,8S16.41,21,12,21z"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <span class="step-number">02</span>
+            <h4 data-i18n="how.step2Title">AI Analysis</h4>
+            <p data-i18n="how.step2Text">Our deep learning models detect informal settlement patterns with high accuracy.</p>
+          </div>
+        </div>
+        
+        <div class="process-step reveal-up" data-step="3">
+          <div class="step-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12,2l3.09,6.26L22,9.27l-5,4.87L18.18,21L12,17.77L5.82,21L7,14.14L2,9.27l6.91-1.01L12,2z M12,15.4l3.76,2.27 l-1-4.28l3.32-2.88l-4.38-0.38L12,6.1l-1.71,4.04l-4.38,0.38l3.32,2.88l-1,4.28L12,15.4z"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <span class="step-number">03</span>
+            <h4 data-i18n="how.step3Title">Actionable Insights</h4>
+            <p data-i18n="how.step3Text">Results are visualized on an interactive map with detailed analytics and export options.</p>
+          </div>
+        </div>
+      </div>
+      
+  </section>
+
+  <!-- Clean Call to Action -->
+  <section class="cta-section" id="demo">
+    <div class="container">
+      <div class="cta-content">
+        <h3 data-i18n="cta.title">Start Analyzing Urban Settlements</h3>
+        <p data-i18n="cta.subtitle">Access powerful tools for detecting and analyzing informal settlements with precision and ease.</p>
+        <div class="cta-actions">
+          <a href="map.html" class="btn btn-primary" data-i18n="cta.launchApp">Launch App</a>
+          <a href="#features" class="btn btn-secondary" data-i18n="cta.exploreFeatures">Explore Features</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider" aria-hidden="true">
+    <div class="divider-wave"></div>
+  </div>
+
+  <!-- Features Section -->
+  <section class="section features-section" id="features">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <h3 data-i18n="features.title">Core Features</h3>
+        <p class="section-subtitle">Powerful tools designed for urban planning professionals</p>
+      </div>
+      <div class="feature-tabs-container">
+        <div class="feature-tabs reveal-up">
+          <button class="feature-tab-btn active" data-feature="1">Threshold Control</button>
+          <button class="feature-tab-btn" data-feature="2">Focus & Dim</button>
+          <button class="feature-tab-btn" data-feature="3">GIS Export</button>
+        </div>
+        <div class="feature-tab-content reveal-up">
+          <div class="feature-descriptions">
+            <div class="feature-description active" data-feature="1">
+              <p>Adjust the sensitivity threshold to fine-tune detection results for your specific needs. Perfect for focusing on high-confidence areas or casting a wider net.</p>
+            </div>
+            <div class="feature-description" data-feature="2">
+              <p>Highlight areas of interest while dimming less relevant regions. This helps you focus on what matters most in your analysis.</p>
+            </div>
+            <div class="feature-description" data-feature="3">
+              <p>Seamlessly export your findings to standard GIS formats for further analysis in your preferred mapping software.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-header reveal-up">
+        <h3 data-i18n="faq.title">FAQ</h3>
+        <p data-i18n="faq.subtitle">Answers to common questions about data, accuracy, exports, and privacy.</p>
+      </div>
+      <div class="grid-2 faq-list stagger">
+        <details class="faq-item reveal-up">
+          <summary data-i18n="faq.q1">How accurate is the detection?</summary>
+          <p data-i18n="faq.a1">Performance varies by city and imagery. Typical precision near threshold 0.35 is around 0.85 with recall around 0.72. You can adjust the threshold in the app.</p>
+        </details>
+        <details class="faq-item reveal-up">
+          <summary data-i18n="faq.q2">What data sources do you use?</summary>
+          <p data-i18n="faq.a2">We use publicly available basemaps and preprocessed satellite predictions. The app overlays a stable white mask on top of OpenStreetMap tiles for clarity.</p>
+        </details>
+        <details class="faq-item reveal-up">
+          <summary data-i18n="faq.q3">Can I export results?</summary>
+          <p data-i18n="faq.a3">Yes. Use "Export to TIFF" to download the overlay for GIS or analysis workflows.</p>
+        </details>
+        <details class="faq-item reveal-up">
+          <summary data-i18n="faq.q4">Will my map interactions be sent to a server?</summary>
+          <p data-i18n="faq.a4">No. The app runs fully in your browser. Overlay rendering and exports happen locally.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-cta">
+        <span class="footer-cta-text" data-i18n="footer.ctaText">Want your city covered?</span>
+        <a href="request-city.html" class="btn btn-primary" data-i18n="nav.requestCity">Request a City</a>
+      </div>
+      <p data-i18n="footer.copyright"> &copy; <span id="year"></span> UrbisX. Built for equitable urban development.</p>
+    </div>
+  </footer>
+  <button id="toTopBtn" class="to-top" aria-label="Back to top" title="Back to top">↑</button>
+  
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    // Respect reduced motion preferences: pause autoplay videos
+    try {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('video[autoplay]').forEach(v => { v.pause(); v.removeAttribute('autoplay'); });
+      }
+    } catch (e) { /* no-op */ }
+
+    // Subtle scroll-reveal animations
+    (function() {
+      try {
+        const els = document.querySelectorAll('.reveal-up');
+        if (!('IntersectionObserver' in window) || els.length === 0) {
+          // Fallback: make all visible
+          els.forEach(el => el.classList.add('is-visible'));
+          return;
+        }
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+        els.forEach(el => io.observe(el));
+      } catch (_) { /* no-op */ }
+    })();
+
+    // Subtle hero video parallax (respects reduced motion)
+    (function() {
+      try {
+        const host = document.querySelector('.hero.hero--video');
+        if (!host) return;
+        const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce) return;
+
+        let pointerY = 0.5;
+        function setVars(visibleFrac = 1) {
+          host.style.setProperty('--vy', ((pointerY - 0.5) * 12 * visibleFrac).toFixed(2) + 'px');
+          const scale = 1 + 0.02 * visibleFrac;
+          host.style.setProperty('--vscale', scale.toFixed(3));
+        }
+        setVars(1);
+
+        window.addEventListener('mousemove', (e) => {
+          const rect = host.getBoundingClientRect();
+          if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
+          pointerY = (e.clientY - rect.top) / Math.max(rect.height, 1);
+          pointerY = Math.max(0, Math.min(1, pointerY));
+          // compute visibility factor
+          const vh = Math.max(rect.height, 1);
+          const visibleFrac = Math.max(0, Math.min(1, 1 - Math.abs(rect.top) / vh));
+          setVars(visibleFrac);
+        }, { passive: true });
+
+        window.addEventListener('scroll', () => {
+          const rect = host.getBoundingClientRect();
+          const vh = Math.max(rect.height, 1);
+          const visibleFrac = Math.max(0, Math.min(1, 1 - Math.abs(rect.top) / vh));
+          setVars(visibleFrac);
+        }, { passive: true });
+      } catch (_) { /* no-op */ }
+    })();
+
+    // Navbar scroll & mobile menu logic for pill design
+    (function() {
+      try {
+        const nav = document.querySelector('.navbar');
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileNav = document.querySelector('.mobile-nav-overlay');
+
+        if (!nav || !menuBtn || !mobileNav) return;
+
+        // Scroll visibility for both navbar and mobile button
+        let lastScrollY = window.scrollY;
+        let isVisible = false;
+
+        function handleScroll() {
+          const shouldBeVisible = window.scrollY > 200;
+          if (shouldBeVisible !== isVisible) {
+            isVisible = shouldBeVisible;
+            nav.classList.toggle('is-visible', isVisible);
+            menuBtn.classList.toggle('is-visible', isVisible);
+          }
+          lastScrollY = window.scrollY;
+        }
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll();
+
+        // Mobile menu toggle
+        menuBtn.addEventListener('click', () => {
+          menuBtn.classList.toggle('is-active');
+          mobileNav.classList.toggle('is-active');
+          document.body.classList.toggle('no-scroll', mobileNav.classList.contains('is-active'));
+        });
+
+      } catch (_) {}
+    })();
+
+    // Back-to-top button visibility + behavior
+    (function() {
+      try {
+        const btn = document.getElementById('toTopBtn');
+        if (!btn) return;
+        function onScroll() {
+          const show = window.scrollY > 400;
+          btn.classList.toggle('to-top--visible', show);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+        btn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      } catch (_) { /* no-op */ }
+    })();
+
+    // Interactive Feature Showcase
+    (function() {
+      try {
+        const showcase = document.querySelector('.feature-showcase');
+        if (!showcase) return;
+        const featureButtons = showcase.querySelectorAll('.feature-btn');
+        const featureVisuals = showcase.querySelectorAll('.feature-visual img');
+
+        featureButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const featureId = button.dataset.feature;
+
+            featureButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            featureVisuals.forEach(visual => {
+              visual.classList.toggle('active', visual.dataset.feature === featureId);
+            });
+          });
+        });
+      } catch (_) { /* no-op */ }
+    })();
+
+    // Scrollspy for navbar links (internal anchors only)
+    (function() {
+      try {
+        const links = Array.from(document.querySelectorAll('.nav-actions a[href^="#"]'));
+        if (!('IntersectionObserver' in window) || links.length === 0) return;
+        const targets = links
+          .map(l => ({ link: l, target: document.querySelector(l.getAttribute('href')) }))
+          .filter(x => !!x.target);
+        if (targets.length === 0) return;
+
+        let activeLink = null;
+        function setActive(link) {
+          if (activeLink === link) return;
+          links.forEach(a => a.classList.toggle('active', a === link));
+          activeLink = link;
+        }
+
+        const ratios = new Map();
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            ratios.set(entry.target, entry.isIntersecting ? entry.intersectionRatio : 0);
+          });
+          // pick highest visible ratio section
+          let best = { ratio: 0, link: null };
+          targets.forEach(({ link, target }) => {
+            const r = ratios.get(target) || 0;
+            if (r > best.ratio) best = { ratio: r, link };
+          });
+          if (best.link) setActive(best.link);
+        }, { threshold: [0.1, 0.25, 0.5, 0.75, 1], rootMargin: '0px 0px -20% 0px' });
+
+        targets.forEach(({ target }) => io.observe(target));
+      } catch (_) { /* no-op */ }
+    })();
+
+    // Scroll progress bar updater
+    (function() {
+      try {
+        const bar = document.getElementById('scrollProgress');
+        if (!bar) return;
+        function onScroll() {
+          const h = document.documentElement;
+          const max = Math.max(1, h.scrollHeight - window.innerHeight);
+          const pct = Math.max(0, Math.min(1, window.scrollY / max));
+          bar.style.width = (pct * 100).toFixed(1) + '%';
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        onScroll();
+      } catch (_) { /* no-op */ }
+    })();
+  </script>
+  <script>
+    // Animate counter in Why section
+    function animateCounter() {
+      const counters = document.querySelectorAll('.stat-number');
+      const speed = 200; // The lower the faster
+      
+      counters.forEach(counter => {
+        const target = +counter.getAttribute('data-count');
+        const count = +counter.innerText;
+        const increment = target / speed;
+        
+        if (count < target) {
+          counter.innerText = Math.ceil(count + increment);
+          setTimeout(animateCounter, 1);
+        } else {
+          counter.innerText = target;
+        }
+      });
+    }
+
+    // Intersection Observer for counter animation
+    const counterSection = document.querySelector('.why-stats');
+    let animated = false;
+    
+    if (counterSection) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !animated) {
+            animated = true;
+            animateCounter();
+            
+            // Add animation class to numbers
+            const numbers = document.querySelectorAll('.stat-number');
+            numbers.forEach(number => {
+              number.classList.add('animated');
+            });
+          }
+        });
+      }, { threshold: 0.5 });
+      
+      observer.observe(counterSection);
+    }
+
+    // Feature Showcase Tabs - Horizontal Layout
+    document.addEventListener('DOMContentLoaded', function() {
+      const featureTabButtons = document.querySelectorAll('.feature-tab-btn');
+      const featureDescriptions = document.querySelectorAll('.feature-description');
+      
+      if (featureTabButtons.length > 0) {
+        // Show first feature by default
+        featureTabButtons[0].classList.add('active');
+        featureDescriptions[0].classList.add('active');
+        
+        featureTabButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const featureId = button.getAttribute('data-feature');
+            
+            // Update active button
+            featureTabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // Update active description
+            featureDescriptions.forEach(desc => {
+              desc.classList.remove('active');
+              if (desc.getAttribute('data-feature') === featureId) {
+                desc.classList.add('active');
+              }
+            });
+          });
+        });
+      }
+    });
+  </script>
+  
+  <!-- Supabase Authentication -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script>
+    // Initialize authentication navigation
+    document.addEventListener('DOMContentLoaded', function() {
+      // Wait for auth to initialize
+      setTimeout(updateAuthNavigation, 100);
+    });
+
+    function updateAuthNavigation() {
+      const authNavSection = document.getElementById('authNavSection');
+      const mobileAuthSection = document.getElementById('mobileAuthSection');
+      
+      if (auth.isAuthenticated) {
+        const user = auth.getCurrentUser();
+        const userInitials = (user.firstName[0] + user.lastName[0]).toUpperCase();
+        
+        // Desktop navigation
+        authNavSection.innerHTML = `
+          <div class="user-menu">
+            <div class="user-avatar" title="${user.firstName} ${user.lastName}">
+              ${userInitials}
+            </div>
+            <div class="user-dropdown">
+              <div class="user-info">
+                <div class="user-name">${user.firstName} ${user.lastName}</div>
+                <div class="user-email">${user.email}</div>
+              </div>
+              <div class="dropdown-divider"></div>
+              <a href="map.html" class="dropdown-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Launch Map
+              </a>
+              <button class="dropdown-item logout-btn" onclick="auth.signOut()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16,17 21,12 16,7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Sign out
+              </button>
+            </div>
+          </div>
+        `;
+        
+        // Mobile navigation
+        mobileAuthSection.innerHTML = `
+          <div class="mobile-user-info">
+            <div class="mobile-user-avatar">${userInitials}</div>
+            <div class="mobile-user-details">
+              <div class="mobile-user-name">${user.firstName} ${user.lastName}</div>
+              <div class="mobile-user-email">${user.email}</div>
+            </div>
+          </div>
+          <a href="map.html">Launch Map</a>
+          <button class="mobile-logout-btn" onclick="auth.signOut()">Sign out</button>
+        `;
+      } else {
+        // Desktop navigation
+        authNavSection.innerHTML = `
+          <a href="login.html" class="auth-link">Sign in</a>
+          <a href="map.html" class="btn btn-secondary">Launch App</a>
+        `;
+        
+        // Mobile navigation
+        mobileAuthSection.innerHTML = `
+          <a href="login.html">Sign in</a>
+          <a href="signup.html">Sign up</a>
+          <a href="map.html">Launch App</a>
+        `;
+      }
+    }
+  </script>
+  
+  <!-- Supabase Authentication -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="translations.js"></script>
+  <script src="language-manager.js"></script>
+  <script>
+    // Initialize authentication navigation
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Initialize language manager
+      const langManager = initLanguageManager(supabaseClient);
+      await langManager.loadUserLanguage();
+      langManager.createLanguageSelector('languageSelectorNav');
+      langManager.updatePageLanguage();
+      
+      // Wait for auth to initialize
+      setTimeout(updateAuthNavigation, 100);
+    });
+
+    async function checkAdminStatus() {
+      try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) return;
+        
+        const { data: adminData } = await supabaseClient
+          .from('admin_users')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .single();
+        
+        if (adminData) {
+          // Show admin links
+          const desktopLink = document.getElementById('adminLinkDesktop');
+          const mobileLink = document.getElementById('adminLinkMobile');
+          if (desktopLink) desktopLink.style.display = 'flex';
+          if (mobileLink) mobileLink.style.display = 'block';
+        }
+      } catch (e) {
+        // Not an admin, that's fine
+      }
+    }
+
+    function updateAuthNavigation() {
+      const authNavSection = document.getElementById('authNavSection');
+      const mobileAuthSection = document.getElementById('mobileAuthSection');
+      
+      if (auth.isAuthenticated) {
+        const user = auth.getCurrentUser();
+        const userInitials = (user.firstName[0] + user.lastName[0]).toUpperCase();
+        
+        // Desktop navigation
+        authNavSection.innerHTML = `
+          <div class="user-menu">
+            <div class="user-avatar" title="${user.firstName} ${user.lastName}">
+              ${userInitials}
+            </div>
+            <div class="user-dropdown">
+              <div class="user-info">
+                <div class="user-name">${user.firstName} ${user.lastName}</div>
+                <div class="user-email">${user.email}</div>
+              </div>
+              <div class="dropdown-divider"></div>
+              <a href="map.html" class="dropdown-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Launch Map
+              </a>
+              <a href="admin.html" class="dropdown-item" id="adminLinkDesktop" style="display:none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                Admin Dashboard
+              </a>
+              <button class="dropdown-item logout-btn" onclick="auth.signOut()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16,17 21,12 16,7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Sign out
+              </button>
+            </div>
+          </div>
+        `;
+        
+        // Mobile navigation
+        mobileAuthSection.innerHTML = `
+          <div class="mobile-user-info">
+            <div class="mobile-user-avatar">${userInitials}</div>
+            <div class="mobile-user-details">
+              <div class="mobile-user-name">${user.firstName} ${user.lastName}</div>
+              <div class="mobile-user-email">${user.email}</div>
+            </div>
+          </div>
+          <a href="map.html">Launch Map</a>
+          <a href="admin.html" id="adminLinkMobile" style="display:none;">Admin Dashboard</a>
+          <button class="mobile-logout-btn" onclick="auth.signOut()">Sign out</button>
+        `;
+        
+        // Check if user is admin
+        checkAdminStatus();
+      } else {
+        // Desktop navigation
+        authNavSection.innerHTML = `
+          <a href="login.html" class="auth-link">Sign in</a>
+          <a href="map.html" class="btn btn-secondary">Launch App</a>
+        `;
+        
+        // Mobile navigation
+        mobileAuthSection.innerHTML = `
+          <a href="login.html">Sign in</a>
+          <a href="signup.html">Sign up</a>
+          <a href="map.html">Launch App</a>
+        `;
+      }
+    }
+  </script>
+  </body>
+</html>

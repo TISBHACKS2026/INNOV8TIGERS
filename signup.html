@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up – UrbisX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="language-styles.css">
+    <meta name="description" content="Create your UrbisX account - Urban Analytics Platform">
+</head>
+<body>
+    <div id="scrollProgress" class="scroll-progress" aria-hidden="true"></div>
+    
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container navbar-inner">
+            <a class="brand" href="index.html">
+                <img src="cropped_circle_image.png" alt="UrbisX Logo" />
+                <h1>UrbisX</h1>
+            </a>
+            <div class="nav-actions">
+                <a href="index.html#features" data-i18n="nav.features">Features</a>
+                <a href="index.html#how" data-i18n="nav.howItWorks">How it Works</a>
+                <div id="languageSelector"></div>
+                <a href="login.html" class="btn btn-secondary">Sign In</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero hero--subtle">
+        <div class="container hero-content reveal-up">
+            <h2 data-i18n="auth.signupTitle">Create your account</h2>
+            <p data-i18n="auth.signupSubtitle">Join UrbisX to access powerful urban analytics tools</p>
+        </div>
+    </header>
+
+    <!-- Form -->
+    <section class="section">
+        <div class="container form-wrap">
+            <div class="form-card reveal-up">
+                <form id="signupForm" novalidate>
+                    <div class="form-grid stagger">
+                        <div class="input-group reveal-up">
+                            <label for="firstName" data-i18n="auth.firstName">First name</label>
+                            <input 
+                                type="text" 
+                                id="firstName" 
+                                name="firstName" 
+                                required 
+                                autocomplete="given-name"
+                                placeholder="e.g., John"
+                            >
+                            <div class="error" id="firstNameError"></div>
+                        </div>
+                        <div class="input-group reveal-up">
+                            <label for="lastName" data-i18n="auth.lastName">Last name</label>
+                            <input 
+                                type="text" 
+                                id="lastName" 
+                                name="lastName" 
+                                required 
+                                autocomplete="family-name"
+                                placeholder="e.g., Doe"
+                            >
+                            <div class="error" id="lastNameError"></div>
+                        </div>
+                    </div>
+
+                    <div class="input-group reveal-up" style="margin-top: 12px;">
+                        <label for="email" data-i18n="auth.email">Email address</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            required 
+                            autocomplete="email"
+                            placeholder="you@example.com"
+                        >
+                        <div class="error" id="emailError"></div>
+                    </div>
+
+                    <div class="input-group reveal-up" style="margin-top: 12px;">
+                        <label for="password" data-i18n="auth.password">Password</label>
+                        <div class="password-input">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                required 
+                                autocomplete="new-password"
+                                placeholder="Create a strong password"
+                            >
+                            <button type="button" class="password-toggle" id="passwordToggle" aria-label="Show password">
+                                <svg class="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg class="eye-off-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="strength-bar">
+                                <div class="strength-fill"></div>
+                            </div>
+                            <span class="strength-text">Password strength</span>
+                        </div>
+                        <div class="error" id="passwordError"></div>
+                    </div>
+
+                    <div class="form-group reveal-up" style="margin-top: 12px;">
+                        <label for="language" data-i18n="auth.language">Preferred Language</label>
+                        <select id="language" name="language" required>
+                            <option value="en">English</option>
+                            <option value="hi">हिन्दी (Hindi)</option>
+                            <option value="fr">Français (French)</option>
+                        </select>
+                    </div>
+
+                    <div class="actions reveal-up">
+                        <button type="submit" class="btn btn-primary" id="signupBtn">
+                            <span class="btn-text" data-i18n="auth.signupButton">Create account</span>
+                            <div class="btn-loader" style="display: none;">
+                                <div class="spinner"></div>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <div id="formError" class="error" role="status" aria-live="polite"></div>
+                    <div id="formSuccess" class="success" role="status" aria-live="polite" style="display: none;">Account created successfully!</div>
+                </form>
+                
+                <div class="auth-footer reveal-up">
+                    <p data-i18n="auth.hasAccount">Already have an account?</p> <a href="login.html" data-i18n="auth.loginLink">Sign in here</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; <span id="year"></span> UrbisX. Built for equitable urban development.</p>
+        </div>
+    </footer>
+
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="translations.js"></script>
+    <script src="language-manager.js"></script>
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+        
+        // Initialize signup page
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize language manager
+            const langManager = initLanguageManager(supabaseClient);
+            await langManager.loadUserLanguage();
+            langManager.createLanguageSelector('languageSelector');
+            langManager.updatePageLanguage();
+            
+            // Set language dropdown to stored value
+            const storedLang = langManager.getLanguage();
+            document.getElementById('language').value = storedLang;
+            
+            initializeSignupPage();
+            initializeAnimations();
+        });
+        
+        function initializeSignupPage() {
+            const form = document.getElementById('signupForm');
+            const passwordInput = document.getElementById('password');
+            const passwordToggle = document.getElementById('passwordToggle');
+            const signupBtn = document.getElementById('signupBtn');
+
+            // Check if already logged in
+            if (auth.isAuthenticated) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Password toggle functionality
+            if (passwordToggle) {
+                passwordToggle.addEventListener('click', function() {
+                    const type = passwordInput.type === 'password' ? 'text' : 'password';
+                    passwordInput.type = type;
+                    
+                    const eyeIcon = this.querySelector('.eye-icon');
+                    const eyeOffIcon = this.querySelector('.eye-off-icon');
+                    
+                    if (type === 'text') {
+                        eyeIcon.style.display = 'none';
+                        eyeOffIcon.style.display = 'block';
+                    } else {
+                        eyeIcon.style.display = 'block';
+                        eyeOffIcon.style.display = 'none';
+                    }
+                });
+            }
+
+            // Password strength indicator
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                const strengthElement = document.getElementById('passwordStrength');
+                const strengthFill = strengthElement.querySelector('.strength-fill');
+                const strengthText = strengthElement.querySelector('.strength-text');
+                
+                if (password.length === 0) {
+                    strengthFill.className = 'strength-fill';
+                    strengthText.textContent = 'Password strength';
+                    return;
+                }
+                
+                const validation = auth.validatePassword(password);
+                strengthFill.className = `strength-fill ${validation.level}`;
+                
+                const strengthLabels = {
+                    weak: 'Weak password',
+                    fair: 'Fair password',
+                    good: 'Good password',
+                    strong: 'Strong password'
+                };
+                
+                strengthText.textContent = strengthLabels[validation.level];
+            });
+
+            // Form submission
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Get form data
+                const formData = new FormData(form);
+                const userData = {
+                    firstName: formData.get('firstName').trim(),
+                    lastName: formData.get('lastName').trim(),
+                    email: formData.get('email').trim(),
+                    password: formData.get('password'),
+                    language: formData.get('language')
+                };
+                
+                // Clear previous errors
+                clearErrors();
+                
+                // Validate form
+                if (!validateForm(userData)) return;
+                
+                // Show loading state
+                setLoadingState(true);
+                
+                try {
+                    // First check if email already exists
+                    showError('Checking if email is available...');
+                    const emailCheck = await auth.checkEmailExists(userData.email);
+                    
+                    if (emailCheck.exists) {
+                        setLoadingState(false);
+                        showError('An account with this email already exists. Please sign in instead or use a different email address.');
+                        return;
+                    }
+                    
+                    // Clear the checking message
+                    clearErrors();
+                    
+                    // Proceed with signup
+                    const result = await auth.signUp(userData.email, userData.password, userData);
+
+                    // Apply language preference immediately (persists in localStorage)
+                    if (result.success) {
+                        const langManager = initLanguageManager(supabaseClient);
+                        await langManager.setLanguage(userData.language);
+
+                        // If user is logged in immediately, save to DB now.
+                        // If email confirmation is required, store pending language to sync on first login.
+                        const signedUpUser = result?.data?.user;
+                        const signedUpSession = result?.data?.session;
+                        if (signedUpUser && signedUpSession) {
+                            await langManager.saveUserLanguage(signedUpUser.id, userData.language);
+                        } else if (signedUpUser) {
+                            localStorage.setItem('urbisx_pending_language', userData.language);
+                        }
+                    }
+                    
+                    if (result.success) {
+                        if (result.requiresConfirmation) {
+                            // Show email confirmation message
+                            showSuccess(result.message);
+                            
+                            // Hide form and show confirmation instructions
+                            form.style.display = 'none';
+                            document.querySelector('.auth-footer').innerHTML = `
+                                <div style="text-align: center; padding: 2rem;">
+                                    <h3 style="color: var(--text-primary); margin-bottom: 1rem;">📧 Check Your Email</h3>
+                                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                                        We've sent a confirmation link to <strong>${userData.email}</strong>
+                                    </p>
+                                    <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
+                                        Click the link in the email to complete your registration and activate your account.
+                                    </p>
+                                    <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 8px; padding: 1rem; margin: 1rem 0;">
+                                        <p style="color: var(--text-secondary); font-size: 0.8rem; margin: 0;">
+                                            💡 <strong>Tip:</strong> Check your spam folder if you don't see the email in your inbox.
+                                        </p>
+                                    </div>
+                                    <div style="margin-top: 2rem;">
+                                        <a href="login.html" class="btn btn-secondary">Go to Sign In</a>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            // Show success message for immediate signup (if email confirmation is disabled)
+                            showSuccess('Account created successfully! Welcome to UrbisX! We\'ll show you around when you visit the map.');
+                            
+                            // Log activity
+                            await db.logUserActivity({
+                                type: 'signup',
+                                data: { email: userData.email }
+                            });
+                            
+                            // Redirect to home page after delay
+                            setTimeout(() => {
+                                window.location.href = 'index.html';
+                            }, 2000);
+                        }
+                    } else {
+                        showError(result.error);
+                    }
+                } catch (error) {
+                    console.error('Signup error:', error);
+                    showError('An unexpected error occurred. Please try again.');
+                } finally {
+                    setLoadingState(false);
+                }
+            });
+
+            function validateForm(userData) {
+                let isValid = true;
+
+                // Validate required fields
+                if (!userData.firstName) {
+                    showFieldError('firstName', 'First name is required');
+                    isValid = false;
+                }
+
+                if (!userData.lastName) {
+                    showFieldError('lastName', 'Last name is required');
+                    isValid = false;
+                }
+
+                if (!userData.email) {
+                    showFieldError('email', 'Email is required');
+                    isValid = false;
+                } else if (!auth.isValidEmail(userData.email)) {
+                    showFieldError('email', 'Please enter a valid email address');
+                    isValid = false;
+                }
+
+                if (!userData.password) {
+                    showFieldError('password', 'Password is required');
+                    isValid = false;
+                } else {
+                    const validation = auth.validatePassword(userData.password);
+                    if (!validation.isValid) {
+                        showFieldError('password', `Password must contain: ${validation.errors.join(', ')}`);
+                        isValid = false;
+                    }
+                }
+
+                return isValid;
+            }
+
+            function showFieldError(fieldName, message) {
+                const errorElement = document.getElementById(`${fieldName}Error`);
+                const inputGroup = document.getElementById(fieldName).closest('.input-group');
+                
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                }
+                
+                if (inputGroup) {
+                    inputGroup.classList.add('invalid');
+                }
+            }
+
+            function clearErrors() {
+                document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.input-group').forEach(el => {
+                    el.classList.remove('invalid');
+                });
+            }
+
+            function showError(message) {
+                const formError = document.getElementById('formError');
+                formError.textContent = message;
+                formError.style.display = 'block';
+            }
+
+            function showSuccess(message) {
+                const formSuccess = document.getElementById('formSuccess');
+                formSuccess.textContent = message;
+                formSuccess.style.display = 'block';
+            }
+
+            function setLoadingState(loading) {
+                signupBtn.disabled = loading;
+                signupBtn.querySelector('.btn-text').style.display = loading ? 'none' : 'block';
+                signupBtn.querySelector('.btn-loader').style.display = loading ? 'flex' : 'none';
+            }
+        }
+        
+        function initializeAnimations() {
+            // Same animation code as login page
+            try {
+                const els = document.querySelectorAll('.reveal-up');
+                if (!('IntersectionObserver' in window) || els.length === 0) {
+                    els.forEach(el => el.classList.add('is-visible'));
+                    return;
+                }
+                const io = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            io.unobserve(entry.target);
+                        }
+                    });
+                }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+                els.forEach(el => io.observe(el));
+            } catch (_) { /* no-op */ }
+            
+            try {
+                const nav = document.querySelector('.navbar');
+                if (!nav) return;
+                let last = false;
+                function onScroll() {
+                    const elevated = window.scrollY > 8;
+                    if (elevated !== last) {
+                        nav.classList.toggle('navbar--elevated', elevated);
+                        last = elevated;
+                    }
+                }
+                window.addEventListener('scroll', onScroll, { passive: true });
+                onScroll();
+            } catch (_) { /* no-op */ }
+            
+            try {
+                const bar = document.getElementById('scrollProgress');
+                if (!bar) return;
+                function onScroll() {
+                    const h = document.documentElement;
+                    const max = Math.max(1, h.scrollHeight - window.innerHeight);
+                    const pct = Math.max(0, Math.min(1, window.scrollY / max));
+                    bar.style.width = (pct * 100).toFixed(1) + '%';
+                }
+                window.addEventListener('scroll', onScroll, { passive: true });
+                window.addEventListener('resize', onScroll);
+                onScroll();
+            } catch (_) { /* no-op */ }
+        }
+    </script>
+</body>
+</html>

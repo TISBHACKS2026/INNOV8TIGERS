@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>urbisx46 - Urban Analytics Platform</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="language-styles.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Real slum data -->
+    <script src="slum_data.js"></script>
+</head>
+<body>
+    <div id="loadingOverlay" class="loading-overlay" aria-busy="true" aria-live="polite">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText" data-i18n="map.loading">Checking authentication…</div>
+    </div>
+    <div class="app-container">
+        
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <a href="index.html" class="sidebar-brand" style="text-decoration: none; color: inherit;">
+                    <img src="cropped_circle_image.png" alt="urbisx46 logo" class="brand-logo" />
+                    <div class="brand-text">
+                        <h2>urbisx46</h2>
+                        <span>Settlement intelligence</span>
+                    </div>
+                </a>
+                <div class="sidebar-content">
+                    <h3 data-i18n="map.controlPanel">Control panel</h3>
+                    <div id="languageSelectorMap"></div>
+
+                    <div class="filter-section">
+                        <h4 data-i18n="map.selectCity">City</h4>
+                        <select id="citySelector" class="city-selector">
+                            <option value="mumbai" selected>Mumbai, Maharashtra</option>
+                            <option value="delhi">New Delhi, Delhi</option>
+                            <option value="bangalore">Bengaluru, Karnataka</option>
+                            <option value="kolkata">Kolkata, West Bengal</option>
+                            <option value="chennai">Chennai, Tamil Nadu</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-section" id="thresholdSection">
+                        <h4 data-i18n="map.modelThreshold">Model Threshold</h4>
+                        <div class="threshold-controls">
+                            <div class="threshold-slider">
+                                <input type="range" id="thresholdRange" min="0" max="100" value="35" step="1">
+                                <div class="threshold-labels">
+                                    <span>0.0</span>
+                                    <span id="thresholdValue">0.35</span>
+                                    <span>1.0</span>
+                                </div>
+                            </div>
+                            <div class="threshold-input">
+                                <label data-i18n="map.threshold">Threshold:</label>
+                                <input type="number" id="thresholdInput" min="0" max="1" step="0.01" value="0.35">
+                            </div>
+                        </div>
+                        <div class="model-metrics">
+                            <div class="metric-row">
+                                <span class="metric-label" data-i18n="map.precision">Precision:</span>
+                                <span class="metric-value" id="precisionValue">0.85</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label" data-i18n="map.recall">Recall:</span>
+                                <span class="metric-value" id="recallValue">0.72</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label" data-i18n="map.f1Score">F1-Score:</span>
+                                <span class="metric-value" id="f1Value">0.78</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="filter-section">
+                        <h4 data-i18n="map.cityLayers">City Layers</h4>
+                        <div class="poi-toggle-list">
+                            <div class="poi-toggle-item">
+                                <input type="checkbox" id="toggleToilets">
+                                <label for="toggleToilets" data-i18n="map.publicToilets">Public Toilets (points)</label>
+                            </div>
+                            <div class="poi-toggle-item">
+                                <input type="checkbox" id="toggleLandfillsPolygons">
+                                <label for="toggleLandfillsPolygons" data-i18n="map.landfills">Landfills (areas)</label>
+                            </div>
+                            <div class="poi-toggle-item">
+                                <input type="checkbox" id="toggleSchoolsPoints">
+                                <label for="toggleSchoolsPoints" data-i18n="map.schools">Schools (points)</label>
+                            </div>
+                        </div>
+                        
+                        <!-- POI Legend -->
+                        <div class="poi-legend">
+                            <h5 style="margin: 0.75rem 0 0.5rem 0; color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Legend</h5>
+                            <div class="legend-items">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #22c55e; border: 1px solid #166534;"></div>
+                                    <span>Schools</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #60a5fa; border: 1px solid #1d4ed8;"></div>
+                                    <span>Public Toilets</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #a16207; border: 1px solid #713f12;"></div>
+                                    <span>Landfills</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Predicted Slum Overlay</h4>
+                        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+                            <input type="checkbox" id="overlayToggle" checked>
+                            <label for="overlayToggle" style="color:#e2e8f0;font-size:.85rem;">Show overlay</label>
+                        </div>
+                        <div class="slider-control">
+                            <div class="slider-header">
+                                <label for="overlayOpacity">Opacity</label>
+                                <span class="slider-value" id="overlayOpacityValue">100%</span>
+                            </div>
+                            <input type="range" id="overlayOpacity" min="0" max="100" value="100" class="styled-range">
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Map Background</h4>
+                        <div class="slider-control">
+                            <div class="slider-header">
+                                <label for="bgDimRange">Background dim</label>
+                                <span class="slider-value" id="bgDimValue">0%</span>
+                            </div>
+                            <input type="range" id="bgDimRange" min="0" max="100" value="0" class="styled-range">
+                        </div>
+                    </div>
+
+
+                    <div class="filter-section">
+                        <h4>Emphasis</h4>
+                        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+                            <input type="checkbox" id="focusMaskToggle">
+                            <label for="focusMaskToggle" style="color:#e2e8f0;font-size:.85rem;">Focus overlay area (dim outside)</label>
+                        </div>
+                        <div class="threshold-input" style="display:none;">
+                            <label>Overlay thickness</label>
+                            <input type="range" id="overlayThickness" min="0" max="3" value="1">
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Export</h4>
+                        <div class="export-buttons">
+                            <button id="exportTiffBtn" class="action-btn">Export TIFF</button>
+                            <button id="exportMapImageBtn" class="action-btn">Download Map</button>
+                        </div>
+                    </div>
+
+                    
+
+                </div>
+            </aside>
+
+            <!-- Map Container -->
+            <div class="map-container">
+                <div id="map"></div>
+                <div class="map-controls">
+                    <button class="control-btn" id="resetView">Reset view</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Modal -->
+        <div class="modal" id="infoModal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="modalBody">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- GeoTIFF/GeoRaster libs for raster overlay -->
+    <script src="https://unpkg.com/proj4/dist/proj4.js"></script>
+    <script src="https://unpkg.com/geotiff/dist/geotiff.browser.min.js"></script>
+    <script src="https://unpkg.com/georaster/dist/georaster.browser.min.js"></script>
+    <script src="https://unpkg.com/georaster-layer-for-leaflet/dist/georaster-layer-for-leaflet.min.js"></script>
+    <!-- TIFF encoder (UTIF.js) for exporting TIFF in-browser -->
+    <script src="https://cdn.jsdelivr.net/npm/utif@3.1.0/UTIF.min.js"></script>
+    
+    <!-- Tour Modal -->
+    <div id="tourModal" class="modal" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-labelledby="tourTitle" aria-describedby="tourBody">
+            <div id="tourBody">
+                <!-- Content will be injected by JavaScript -->
+            </div>
+            <div class="tour-controls">
+                <button id="tourPrev" class="action-btn secondary">Previous</button>
+                <div style="flex: 1"></div>
+                <button id="tourSkip" class="action-btn secondary">Skip</button>
+                <button id="tourNext" class="action-btn">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Button -->
+    <button id="startTour" class="help-button" title="Start guided tour" aria-label="Start guided tour">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+    </button>
+
+    <!-- POI Index Manager -->
+    <script src="poi_index_manager.js"></script>
+    
+    <!-- City Manager -->
+    <script src="city-manager.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+    
+    <!-- Supabase Authentication -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="translations.js"></script>
+    <script src="language-manager.js"></script>
+    <script>
+        // Immediate authentication check - before anything loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize language manager first
+            const langManager = initLanguageManager(supabaseClient);
+            await langManager.loadUserLanguage();
+            langManager.createLanguageSelector('languageSelectorMap');
+            langManager.updatePageLanguage();
+            // Hide map content initially
+            document.body.style.visibility = 'hidden';
+            
+            // Quick auth check
+            checkAuthAndInitialize();
+        });
+
+        async function checkAuthAndInitialize() {
+            try {
+                console.log('Starting auth check...');
+                
+                // Wait for auth to properly initialize
+                let attempts = 0;
+                const maxAttempts = 50; // 5 seconds max wait
+                
+                while (attempts < maxAttempts) {
+                    // Check if auth is initialized and has checked session
+                    if (auth && typeof auth.isAuthenticated !== 'undefined') {
+                        console.log('Auth object initialized after', attempts * 100, 'ms');
+                        break;
+                    }
+                    
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+                
+                if (attempts >= maxAttempts) {
+                    console.error('Auth initialization timeout');
+                    window.location.href = 'login.html?redirect=map.html';
+                    return;
+                }
+                
+                // Double-check by getting current session
+                const { data: { session } } = await auth.client.auth.getSession();
+                
+                console.log('Session check:', session ? 'Found session' : 'No session');
+                console.log('Auth.isAuthenticated:', auth.isAuthenticated);
+                
+                if (!session || !auth.isAuthenticated) {
+                    console.log('User not authenticated, redirecting to login');
+                    
+                    // Update loading text
+                    const loadingText = document.getElementById('loadingText');
+                    if (loadingText) {
+                        loadingText.textContent = 'Redirecting to login…';
+                    }
+                    
+                    // Redirect if not authenticated
+                    window.location.href = 'login.html?redirect=map.html';
+                    return;
+                }
+                
+                console.log('User authenticated, initializing map');
+                
+                // Update loading text for authenticated users
+                const loadingText = document.getElementById('loadingText');
+                if (loadingText) {
+                    loadingText.textContent = 'Loading map…';
+                }
+                
+                // Show content if authenticated
+                document.body.style.visibility = 'visible';
+                
+                // Initialize map functionality
+                initializeMapForAuthenticatedUser();
+                
+            } catch (error) {
+                console.error('Auth check error:', error);
+                // Redirect to login on any error
+                window.location.href = 'login.html?redirect=map.html';
+            }
+        }
+
+        function initializeMapForAuthenticatedUser() {
+            // Add user info to sidebar
+            addUserInfoToSidebar();
+            
+            // Log map access
+            db.logUserActivity({
+                type: 'map_access',
+                data: { timestamp: new Date().toISOString() }
+            });
+
+            // Check if we should show the tour for new users
+            checkAndStartTour();
+        }
+        
+        async function addUserInfoToSidebar() {
+            const user = auth.getCurrentUser();
+            if (user) {
+                const sidebarBrand = document.querySelector('.sidebar-brand');
+                if (sidebarBrand) {
+                    // Check if user is admin
+                    let isAdmin = false;
+                    try {
+                        const { data: { session } } = await supabaseClient.auth.getSession();
+                        if (session) {
+                            const { data: adminData } = await supabaseClient
+                                .from('admin_users')
+                                .select('*')
+                                .eq('user_id', session.user.id)
+                                .single();
+                            isAdmin = !!adminData;
+                        }
+                    } catch (e) {
+                        // Not an admin
+                    }
+
+                    // Add user info after the brand
+                    const userInfo = document.createElement('div');
+                    userInfo.className = 'sidebar-user-info';
+                    userInfo.innerHTML = `
+                        <div class="user-welcome">
+                            <div class="user-avatar-small">${(user.firstName[0] + user.lastName[0]).toUpperCase()}</div>
+                            <div class="user-details">
+                                <div class="user-name">${user.firstName} ${user.lastName}</div>
+                                ${isAdmin ? '<a href="admin.html" class="admin-link" style="color: #00d4ff; font-size: 0.8rem; text-decoration: none; margin-bottom: 0.25rem; display: block;">🔧 Admin Dashboard</a>' : ''}
+                                <button class="logout-link" onclick="auth.signOut()">Sign out</button>
+                            </div>
+                        </div>
+                    `;
+                    sidebarBrand.parentNode.insertBefore(userInfo, sidebarBrand.nextSibling);
+                }
+            }
+        }
+
+        async function checkAndStartTour() {
+            try {
+                // Check if user is new and hasn't seen the tour
+                const isNew = auth.isNewUser();
+                const hasSeenTour = await auth.hasSeenTour();
+                
+                if (isNew && !hasSeenTour) {
+                    // Show welcome message first
+                    showWelcomeMessage();
+                    
+                    // Start tour after a short delay
+                    setTimeout(() => {
+                        startGuidedTour();
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error('Error checking tour status:', error);
+            }
+        }
+
+        function showWelcomeMessage() {
+            const user = auth.getCurrentUser();
+            const welcomeHtml = `
+                <div id="welcomeMessage" style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #00d4ff, #3b82f6);
+                    color: white;
+                    padding: 1rem 1.5rem;
+                    border-radius: 12px;
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                    z-index: 10000;
+                    max-width: 300px;
+                    animation: slideInRight 0.5s ease-out;
+                ">
+                    <h4 style="margin: 0 0 0.5rem 0; font-size: 1.1rem;">Welcome to UrbisX, ${user.firstName}! 🎉</h4>
+                    <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">
+                        Let's take a quick tour to show you around the platform.
+                    </p>
+                </div>
+                <style>
+                    @keyframes slideInRight {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                </style>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', welcomeHtml);
+            
+            // Remove welcome message after 3 seconds
+            setTimeout(() => {
+                const welcomeEl = document.getElementById('welcomeMessage');
+                if (welcomeEl) {
+                    welcomeEl.style.animation = 'slideInRight 0.5s ease-out reverse';
+                    setTimeout(() => welcomeEl.remove(), 500);
+                }
+            }, 3000);
+        }
+
+        function startGuidedTour() {
+            // Check if the tour button exists and click it
+            const tourButton = document.getElementById('startTour');
+            if (tourButton) {
+                tourButton.click();
+                
+                // Mark tour as seen when it starts
+                auth.markTourAsSeen();
+                
+                // Log that tour was auto-started for new user
+                db.logUserActivity({
+                    type: 'tour_auto_started',
+                    data: { 
+                        timestamp: new Date().toISOString(),
+                        reason: 'new_user'
+                    }
+                });
+            } else {
+                console.warn('Tour button not found, cannot start guided tour');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Debug - UrbisX</title>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        .debug-section {
+            background: #1e293b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .status.success { background: #065f46; border: 1px solid #10b981; }
+        .status.error { background: #7f1d1d; border: 1px solid #ef4444; }
+        .status.warning { background: #78350f; border: 1px solid #f59e0b; }
+        .status.info { background: #1e3a8a; border: 1px solid #3b82f6; }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #2563eb; }
+        pre {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Authentication Debug Tool</h1>
+    <p>This page helps debug authentication issues with Supabase.</p>
+
+    <div class="debug-section">
+        <h2>Authentication Status</h2>
+        <div id="authStatus">Checking...</div>
+        <button onclick="checkAuth()">Refresh Auth Status</button>
+        <button onclick="clearSession()">Clear Session</button>
+        <button onclick="goToLogin()">Go to Login</button>
+        <button onclick="goToMap()">Go to Map</button>
+    </div>
+
+    <div class="debug-section">
+        <h2>Session Information</h2>
+        <pre id="sessionInfo">Loading...</pre>
+    </div>
+
+    <div class="debug-section">
+        <h2>User Information</h2>
+        <pre id="userInfo">Loading...</pre>
+    </div>
+
+    <div class="debug-section">
+        <h2>Debug Log</h2>
+        <div id="debugLog"></div>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <!-- Supabase Authentication -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        let debugLog = [];
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.push({ timestamp, message, type });
+            updateDebugLog();
+            console.log(`[${timestamp}] ${message}`);
+        }
+
+        function updateDebugLog() {
+            const logElement = document.getElementById('debugLog');
+            logElement.innerHTML = debugLog.slice(-10).map(entry => 
+                `<div class="status ${entry.type}">[${entry.timestamp}] ${entry.message}</div>`
+            ).join('');
+        }
+
+        function clearLog() {
+            debugLog = [];
+            updateDebugLog();
+        }
+
+        async function checkAuth() {
+            try {
+                log('Checking authentication status...', 'info');
+                
+                // Check if auth object exists
+                if (!auth) {
+                    log('Auth object not found!', 'error');
+                    document.getElementById('authStatus').innerHTML = 
+                        '<div class="status error">❌ Auth object not initialized</div>';
+                    return;
+                }
+
+                // Check auth properties
+                log(`Auth.isAuthenticated: ${auth.isAuthenticated}`, 'info');
+                log(`Auth.currentUser: ${auth.currentUser ? 'exists' : 'null'}`, 'info');
+
+                // Get session directly from Supabase
+                const { data: { session }, error } = await auth.client.auth.getSession();
+                
+                if (error) {
+                    log(`Session error: ${error.message}`, 'error');
+                    document.getElementById('authStatus').innerHTML = 
+                        `<div class="status error">❌ Session Error: ${error.message}</div>`;
+                    return;
+                }
+
+                if (session) {
+                    log('Valid session found', 'success');
+                    document.getElementById('authStatus').innerHTML = 
+                        '<div class="status success">✅ User is authenticated</div>';
+                    
+                    // Update session info
+                    document.getElementById('sessionInfo').textContent = 
+                        JSON.stringify(session, null, 2);
+                    
+                    // Update user info
+                    const user = auth.getCurrentUser();
+                    document.getElementById('userInfo').textContent = 
+                        JSON.stringify(user, null, 2);
+                } else {
+                    log('No session found', 'warning');
+                    document.getElementById('authStatus').innerHTML = 
+                        '<div class="status warning">⚠️ No active session</div>';
+                    
+                    document.getElementById('sessionInfo').textContent = 'No session';
+                    document.getElementById('userInfo').textContent = 'No user';
+                }
+
+            } catch (error) {
+                log(`Auth check error: ${error.message}`, 'error');
+                document.getElementById('authStatus').innerHTML = 
+                    `<div class="status error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        async function clearSession() {
+            try {
+                log('Clearing session...', 'info');
+                await auth.signOut();
+                log('Session cleared', 'success');
+                setTimeout(checkAuth, 1000);
+            } catch (error) {
+                log(`Clear session error: ${error.message}`, 'error');
+            }
+        }
+
+        function goToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        function goToMap() {
+            window.location.href = 'map.html';
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            log('Debug page loaded', 'info');
+            
+            // Wait a moment for auth to initialize
+            setTimeout(checkAuth, 500);
+            
+            // Set up periodic checks
+            setInterval(checkAuth, 5000);
+        });
+
+        // Listen for auth state changes
+        if (typeof auth !== 'undefined' && auth.client) {
+            auth.client.auth.onAuthStateChange((event, session) => {
+                log(`Auth state changed: ${event}`, 'info');
+                setTimeout(checkAuth, 100);
+            });
+        }
+    </script>
+</body>
+</html>
