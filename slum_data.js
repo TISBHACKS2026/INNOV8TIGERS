@@ -1,0 +1,24 @@
+// Auto-generated slum data from TIFF predictions
+const realSlumData = {
+    mumbai: [
+        {"id": 1, "lat": 19.188285613272726, "lng": 72.86595616042888, "confidence": 0.3639, "slum_pixels": 3639, "grid_size": "100x100", "name": "Grid Cell 001", "city": "Mumbai", "state": "Maharashtra", "population": 90975, "description": "Grid cell with 36.4% slum probability (3639/10000 pixels)."},
+        {"id": 2, "lat": 19.18839597752159, "lng": 72.8754615077781, "confidence": 0.3873, "slum_pixels": 3873, "grid_size": "100x100", "name": "Grid Cell 002", "city": "Mumbai", "state": "Maharashtra", "population": 96825, "description": "Grid cell with 38.7% slum probability (3873/10000 pixels)."},
+        {"id": 3, "lat": 19.161953033465878, "lng": 72.93283304478554, "confidence": 0.4405, "slum_pixels": 4405, "grid_size": "100x100", "name": "Grid Cell 003", "city": "Mumbai", "state": "Maharashtra", "population": 110125, "description": "Grid cell with 44.0% slum probability (4405/10000 pixels)."},
+        {"id": 4, "lat": 19.152921414382106, "lng": 72.93294561650535, "confidence": 0.3342, "slum_pixels": 3342, "grid_size": "100x100", "name": "Grid Cell 004", "city": "Mumbai", "state": "Maharashtra", "population": 83550, "description": "Grid cell with 33.4% slum probability (3342/10000 pixels)."},
+        {"id": 5, "lat": 19.14378264480482, "lng": 72.9235549758832, "confidence": 0.4343, "slum_pixels": 4343, "grid_size": "100x100", "name": "Grid Cell 005", "city": "Mumbai", "state": "Maharashtra", "population": 108575, "description": "Grid cell with 43.4% slum probability (4343/10000 pixels)."},
+        {"id": 6, "lat": 19.1073325442853, "lng": 72.89550356222125, "confidence": 0.3236, "slum_pixels": 3236, "grid_size": "100x100", "name": "Grid Cell 006", "city": "Mumbai", "state": "Maharashtra", "population": 80900, "description": "Grid cell with 32.4% slum probability (3236/10000 pixels)."},
+        {"id": 7, "lat": 19.107548839713576, "lng": 72.9145054162209, "confidence": 0.3875, "slum_pixels": 3875, "grid_size": "100x100", "name": "Grid Cell 007", "city": "Mumbai", "state": "Maharashtra", "population": 96875, "description": "Grid cell with 38.8% slum probability (3875/10000 pixels)."},
+        {"id": 8, "lat": 19.098192260282786, "lng": 72.88611749814261, "confidence": 0.3602, "slum_pixels": 3602, "grid_size": "100x100", "name": "Grid Cell 008", "city": "Mumbai", "state": "Maharashtra", "population": 90050, "description": "Grid cell with 36.0% slum probability (3602/10000 pixels)."},
+        {"id": 9, "lat": 19.09830108711885, "lng": 72.89561781381727, "confidence": 0.5754, "slum_pixels": 5754, "grid_size": "100x100", "name": "Grid Cell 009", "city": "Mumbai", "state": "Maharashtra", "population": 143850, "description": "Grid cell with 57.5% slum probability (5754/10000 pixels)."},
+        {"id": 10, "lat": 19.089160848950115, "lng": 72.88623219991602, "confidence": 0.351, "slum_pixels": 3510, "grid_size": "100x100", "name": "Grid Cell 010", "city": "Mumbai", "state": "Maharashtra", "population": 87750, "description": "Grid cell with 35.1% slum probability (3510/10000 pixels)."},
+        {"id": 11, "lat": 19.08926962044838, "lng": 72.89573200102181, "confidence": 0.3213, "slum_pixels": 3213, "grid_size": "100x100", "name": "Grid Cell 011", "city": "Mumbai", "state": "Maharashtra", "population": 80325, "description": "Grid cell with 32.1% slum probability (3213/10000 pixels)."},
+        {"id": 12, "lat": 19.062498049583517, "lng": 72.92456933866778, "confidence": 0.6702, "slum_pixels": 6702, "grid_size": "100x100", "name": "Grid Cell 012", "city": "Mumbai", "state": "Maharashtra", "population": 167550, "description": "Grid cell with 67.0% slum probability (6702/10000 pixels)."},
+        {"id": 13, "lat": 19.05357297801869, "lng": 72.93417972937885, "confidence": 0.3106, "slum_pixels": 3106, "grid_size": "100x100", "name": "Grid Cell 013", "city": "Mumbai", "state": "Maharashtra", "population": 77650, "description": "Grid cell with 31.1% slum probability (3106/10000 pixels)."},
+        {"id": 14, "lat": 19.043675237845427, "lng": 72.85831342996505, "confidence": 0.3889, "slum_pixels": 3889, "grid_size": "100x100", "name": "Grid Cell 014", "city": "Mumbai", "state": "Maharashtra", "population": 97225, "description": "Grid cell with 38.9% slum probability (3889/10000 pixels)."},
+    ]
+};
+
+// Export for use in main script
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = realSlumData;
+}
