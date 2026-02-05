@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="landing.css" />
   <link rel="stylesheet" href="language-styles.css" />
+  <link rel="preload" as="image" href="hero.jpg" fetchpriority="high" />
   <meta name="description" content="UrbisX uses AI to detect and visualize informal settlements for equitable urban development." />
 </head>
 <body>
@@ -26,7 +27,7 @@
   <nav class="navbar">
     <div class="navbar-inner">
       <a class="brand" href="index.html">
-        <img src="cropped_circle_image.png" alt="UrbisX Logo" />
+        <img src="cropped_circle_image_128.png" alt="UrbisX Logo" width="48" height="48" decoding="async" />
         <span class="wordmark">UrbisX</span>
       </a>
       <div class="nav-actions">
@@ -49,7 +50,7 @@
   <!-- Hero -->
   <header class="hero hero--video">
     <div class="hero-bg" aria-hidden="true">
-      <img src="image copy.png" alt="UrbisX hero image" class="hero-video">
+      <img src="hero.jpg" alt="UrbisX hero image" class="hero-video" width="1600" height="1147" decoding="async" fetchpriority="high" srcset="hero-800.jpg 800w, hero.jpg 1600w" sizes="100vw">
       <div class="hero-overlay"></div>
     </div>
     <div class="hero-ornaments" aria-hidden="true">
@@ -100,7 +101,7 @@
           <div class="browser-address">app.urbisx.com/map</div>
         </div>
         <div class="browser-content">
-          <img src="platform-screenshot.png" alt="UrbisX Platform Interface" class="showcase-screenshot">
+          <img src="platform-screenshot.jpg" alt="UrbisX Platform Interface" class="showcase-screenshot" width="1600" height="750" loading="lazy" decoding="async" srcset="platform-screenshot-800.jpg 800w, platform-screenshot.jpg 1600w" sizes="(max-width: 900px) 90vw, 1000px">
         </div>
       </div>
       
